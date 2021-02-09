@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:dio/dio.dart';
@@ -9,25 +8,40 @@ import 'package:flutter_element/network/app_client.dart';
 class MainNetwork extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: RaisedButton(
-        onPressed: () {
-          // getHttpDio();
-          // getUseClient();
-          getPost();
-        },
-        child: Text("Fetch Data"),
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        FutureBuilder<Post>(
+          future: getPostWithCompleter(),
+          builder: (context, snapshot) {
+            if(snapshot.hasError){
+              return Text("Error!!!");
+            }
+            if(snapshot.hasData){
+              return Text(snapshot.data.title);
+            }
+            return Text("Waiting for result..");
+          },
+        ),
+        RaisedButton(
+          onPressed: () {
+            // getHttpDio();
+            // getUseClient();
+            getPost();
+          },
+          child: Text("Fetch Data"),
+        ),
+      ],
     );
   }
 
-  void getPost(){
-    getPostWithCompleter().then((value) => {
-      print("Title: ${value.title}")
-    });
+  getUseFutureBuilder() {}
+
+  void getPost() {
+    getPostWithCompleter().then((value) => {print("Title: ${value.title}")});
   }
 
-  Future<Post> getPostWithCompleter() async{
+  Future<Post> getPostWithCompleter() async {
     var c = Completer<Post>();
     var response = await getUseFuture();
     if (response.statusCode == 200) {
@@ -38,11 +52,13 @@ class MainNetwork extends StatelessWidget {
   }
 
   Future<Response> getUseFuture() {
-    return AppClient.instance.dio.get("https://jsonplaceholder.typicode.com/posts/1");
+    return AppClient.instance.dio
+        .get("https://jsonplaceholder.typicode.com/posts/1");
   }
 
-  void getUseClient() async{
-    Response response = await AppClient.instance.dio.get("https://jsonplaceholder.typicode.com/posts/1");
+  void getUseClient() async {
+    Response response = await AppClient.instance.dio
+        .get("https://jsonplaceholder.typicode.com/posts/1");
     if (response.statusCode == 200) {
       var post = Post.fromJson(response.data);
       print("Title: ${post.title}");
