@@ -1,4 +1,6 @@
 
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,16 +13,40 @@ class MainNetwork extends StatelessWidget {
       child: RaisedButton(
         onPressed: () {
           // getHttpDio();
-          getUseClient();
+          // getUseClient();
+          getPost();
         },
         child: Text("Fetch Data"),
       ),
     );
   }
 
+  void getPost(){
+    getPostWithCompleter().then((value) => {
+      print("Title: ${value.title}")
+    });
+  }
+
+  Future<Post> getPostWithCompleter() async{
+    var c = Completer<Post>();
+    var response = await getUseFuture();
+    if (response.statusCode == 200) {
+      var post = Post.fromJson(response.data);
+      c.complete(post);
+    }
+    return c.future;
+  }
+
+  Future<Response> getUseFuture() {
+    return AppClient.instance.dio.get("https://jsonplaceholder.typicode.com/posts/1");
+  }
+
   void getUseClient() async{
     Response response = await AppClient.instance.dio.get("https://jsonplaceholder.typicode.com/posts/1");
-    print(response);
+    if (response.statusCode == 200) {
+      var post = Post.fromJson(response.data);
+      print("Title: ${post.title}");
+    }
   }
 
   void getHttpDio() async {
