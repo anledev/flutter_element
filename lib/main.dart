@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_element/network/main_network.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: Text("Demo"),
         ),
-        body: Center(),
+        body: MainNetwork(),
       ),
     );
   }
