@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_element/core/main_stream.dart';
-import 'package:flutter_element/network/main_network.dart';
+import 'package:flutter_element/bloc_sample/search_view.dart';
 
 void main() {
   runApp(MyApp());
@@ -19,7 +18,7 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: Text("Demo"),
         ),
-        body: MainStream(),
+        body: SearchView(),
       ),
     );
   }
