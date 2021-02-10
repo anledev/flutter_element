@@ -8,36 +8,30 @@ import 'package:flutter_element/network/app_client.dart';
 class MainNetwork extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        FutureBuilder<Post>(
-          future: getPostWithCompleter(),
-          builder: (context, snapshot) {
-            if(snapshot.hasError){
-              return Text("Error!!!");
-            }
-            if(snapshot.hasData){
-              return Text(snapshot.data.title);
-            }
-            return Text("Waiting for result..");
-          },
-        ),
-        RaisedButton(
-          onPressed: () {
-            // getHttpDio();
-            // getUseClient();
-            getPost();
-          },
-          child: Text("Fetch Data"),
-        ),
-      ],
+    return Center(
+      child: RaisedButton(
+        onPressed: () {
+          // getHttpDio();  // demo normal dio
+          // getUseClient(); // demo normal use Client
+          // getPost(); //demo data use Future + Completer
+          demoStreamFromFuture();
+        },
+        child: Text("Fetch Data"),
+      ),
     );
   }
 
-  getUseFutureBuilder() {}
+  void demoStreamFromFuture() {
+    Stream<Post> stream = Stream<Post>.fromFuture(getPostWithCompleter());
+    stream.listen((data) {
+      print("Title: ${data.title}");
+    }, onDone: (){
+      print("Done");
+    });
+  }
 
-  void getPost() {
+  /*get Data use Future + Completer: start*/
+  void callGetPostCompleter() {
     getPostWithCompleter().then((value) => {print("Title: ${value.title}")});
   }
 
@@ -55,6 +49,7 @@ class MainNetwork extends StatelessWidget {
     return AppClient.instance.dio
         .get("https://jsonplaceholder.typicode.com/posts/1");
   }
+  /*get Data use Future + Completer: end*/
 
   void getUseClient() async {
     Response response = await AppClient.instance.dio
